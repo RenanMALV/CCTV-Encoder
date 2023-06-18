@@ -84,7 +84,7 @@ class Encoder:
 		:return: The compressed_foreground, background and meta_data
 		:doc-author: Trelent
 		"""
-        csr_data = np.array(csr_m.data)
+        csr_data = np.array(csr_m.data).astype(np.int16)
         csr_index = np.array(csr_m.indices)
         csr_idx_ptr = np.array(csr_m.indptr)
         total_size_KiB = (csr_data.nbytes + csr_index.nbytes +
@@ -230,12 +230,10 @@ class Encoder:
 
         L, S = self.pcp(A, maxiter=self.n_iter, k=self.quality)
         foreground = S.astype(np.int16)
-        background = L[:, 0]
+        background = L[:, 0].astype(np.int16)
 
         print("Sparsity:", (foreground.size - np.count_nonzero(foreground))
               * 100 / foreground.size, "%")
 
         # Save the compressed matrix to a file
         self.save_compressed_file(self.compress(foreground), background)
-
-        return L, foreground

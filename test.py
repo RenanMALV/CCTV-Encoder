@@ -5,13 +5,13 @@ from cctv_encoder import Encoder, Decoder
 
 # Encode process
 
-WORKDIR = "/test_Files"
+WORKDIR = "/workspaces/CCTV-Encoder/test_Files"
 
 my_enc = Encoder(WORKDIR)
 
 my_enc.set_precision(1e-2)
 my_enc.set_quality(1)
-my_enc.set_PCP_n_iter(8)
+my_enc.set_PCP_n_iter(7)
 
 my_enc.encode(video_path = "video.mp4")
 
