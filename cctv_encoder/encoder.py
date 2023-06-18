@@ -227,10 +227,11 @@ class Encoder:
 
         # Create matrix A
         A = video_to_matrix(raw_video)
+        print("RAW data size:", A.nbytes / 1024, "KiB")
 
-        L, S = self.pcp(A, maxiter=self.n_iter, k=self.quality)
-        foreground = S.astype(np.int16)
-        background = L[:, 0].astype(np.int16)
+        background, foreground = self.pcp(A, maxiter=self.n_iter, k=self.quality)
+        foreground = foreground.astype(np.int16)
+        background = background[:, 0].astype(np.int16)
 
         print("Sparsity:", (foreground.size - np.count_nonzero(foreground))
               * 100 / foreground.size, "%")
