@@ -38,13 +38,12 @@ class Encoder:
 		
 		
 		:param self: Represent the instance of the class
-		:param work_directory: Set the directory where the video is stored
+		:param work_directory: Set the directory where the encoded video will be is stored
 		:param video_path: Specify the path of the video to be encoded
-		:param n_iter: Determine the number of iterations to run through the algorithm
+		:param n_iter: Determine the number of iterations to run through the PCP algorithm
 		:param tol: Determine the tolerance for the convergence of the algorithm
-		:param quality: Determine the quality of the video
+		:param quality: Determine the quality of details captuerd on the foreground video
 		:return: Nothing
-		:doc-author: Trelent
 		"""
         self.work_directory = work_directory
         self.video_path = video_path
@@ -63,26 +62,27 @@ class Encoder:
 		more efficient in terms of storage.
 		
 		:param self: Represent the instance of the class
-		:param S: Store the sparse matrix
+		:param S: The sparse matrix
 		:return: A compressed sparse row matrix
-		:doc-author: Trelent
 		"""
         return csr_matrix(S)
 
     # Save the compressed object to a file
     def save_compressed_file(self, csr_m, background):
         """
-		The save_compressed_file function takes in a csr_matrix, and a background image.
-		It then converts the csr_matrix into three arrays: data, indices, and indptr.
-		The function then calculates the total size of these arrays in KiB (kilobytes). 
-		Then it creates an array called compressed_foreground that contains all three of these arrays. 
-		Finally it saves this array as well as the background image to a .npz file.
+		The save_compressed_file function takes in a csr_m, which is the foreground matrix,
+        and a background. It then converts the data into an array of int16s.
+        It also creates arrays for indices and index pointers.
+		The total size of all these arrays is calculated in KiB (Kibibytes).
+        The compressed foreground is created by combining the three arrays into one object array.
+		A meta_data array containing width, height, and fps values 
+		is also created to be saved with the compressed file.
+        The archive is then saved inside the work directory
 		
-		:param self: Access the instance attributes and methods
-		:param csr_m: Store the sparse matrix
-		:param background: Store the background image
-		:return: The compressed_foreground, background and meta_data
-		:doc-author: Trelent
+		:param self: Refer to the object itself
+		:param csr_m: Matrix that stores the foreground
+		:param background: The background image
+		:return: Nothing
 		"""
         csr_data = np.array(csr_m.data).astype(np.int16)
         csr_index = np.array(csr_m.indices)
@@ -106,23 +106,21 @@ class Encoder:
 		The set_PCP_n_iter function sets the number of iterations for the PCP algorithm.
 				
 		:param self: Represent the instance of the class
-		:param n_iter: Set the number of iterations for the pcpn algorithm
-		:return: The number of iterations
-		:doc-author: Trelent
+		:param n_iter: Set the number of iterations for the PCP algorithm
+		:return: Nothing
 		"""
         self.n_iter = n_iter
 
     # Set the precision of the optimisation algorithm for creating the sparse matrix
     def set_precision(self, tol):
         """
-		The set_precision function sets the tolerance for the root finding algorithm.
+		The set_precision function sets the tolerance for the convergence check algorithm.
 		The default value is 1e-6, but this can be changed by calling set_precision(tol)
 		where tol is a float representing the desired tolerance.
 		
 		:param self: Represent the instance of the class
-		:param tol: Set the precision of the output
-		:return: The current value of the tolerance
-		:doc-author: Trelent
+		:param tol: Set the tolerance for the estimated solution's error
+		:return: Nothing
 		"""
         self.tol = tol
 
@@ -131,14 +129,11 @@ class Encoder:
     # represents the K value in the PCP algorithm
     def set_quality(self, quality):
         """
-		The set_quality function sets the quality of a song.
-		Args:
-		quality (int): The quality of details on foreground. 
+		The set_quality function sets the quality of details captured on the foreground
 		
 		:param self: Represent the instance of the class
 		:param quality: Set the quality of the foreground
 		:return: Nothing
-		:doc-author: Trelent
 		"""
         self.quality = quality
 
@@ -154,8 +149,8 @@ class Encoder:
 		:param X: Represent the input matrix
 		:param maxiter: Set the maximum number of iterations to perform
 		:param k: Set the initial value of mu
-		:return: A tuple of two matrices: the low-rank matrix and the sparse matrix
-		:doc-author: Trelent
+		:return: A tuple of two matrices: the low-rank matrix(background)
+        and the sparse matrix(foreground)
 		"""
         m, n = X.shape
         trans = m < n
@@ -209,14 +204,12 @@ class Encoder:
     # Video encoding function
     def encode(self, video_path):
         """
-		The encode function takes a video file and compresses it using the PCP algorithm.
-		The function returns two matrices, L and S, which are the low-rank matrix 
-		(background) and sparse matrix (foreground), respectively.
+		The encode function takes a video file and compresses it using the PCP algorithm
+        and a csr matrix. Save the encoded video on the work directory.
 		
-		:param self: Access the attributes and methods of the class
-		:param video_path: Specify the path of the video to be encoded
-		:return: Two matrices l and foreground
-		:doc-author: Trelent
+		:param self: Refer to the object itself
+		:param video_path: Get the path of the video to be compressed
+		:return: Nothing
 		"""
         self.video_path = video_path
         raw_video = mpEdit.VideoFileClip(self.video_path)

@@ -25,7 +25,7 @@ class Decoder:
         It is called when an object of that class is created.
 
         :param self: Represent the instance of the class
-        :param work_directory: Set the working directory of the class
+        :param work_directory: Set the working directory of the class (to save the files)
         :param encoded_file_path: Store the path of the encoded file
         :return: Nothing
         """
@@ -45,13 +45,9 @@ class Decoder:
         csr_m = encoded_data[keys[0]], background = encoded_data[keys[2]],
         meta_data = encoded_data[key3]. 
 
-        Parameters:
-            -encoded_file_
-
         :param self: Represent the instance of the class
         :param encoded_file_path: Specify the path of the encoded file
-        :return: A tuple of three items:
-        :doc-author: Trelent
+        :return: A tuple of three items that were compressed
         """
         encoded_data = np.load(encoded_file_path, allow_pickle=True)
         keys = list(encoded_data.keys())
@@ -62,15 +58,15 @@ class Decoder:
 
     def decompress(self, csr_m, background):
         """
-        The decompress function takes a compressed matrix and the background value,
-        and returns the original matrix. The decompress function is used to reconstruct
+        The decompress function takes a compressed matrix and the background image,
+        and returns a aproximation for the original matrix.
+        The decompress function is used to reconstruct
         the original data from its compressed form.
 
         :param self: Represent the instance of the class
         :param csr_m: Store the compressed sparse row matrix
-        :param background: Add the background to the matrix s
-        :return: A matrix of the same shape as a, but with values scaled to be between 0 and 1
-        :doc-author: Trelent
+        :param background: the background image
+        :return: The aproximation for the original matrix A 
         """
         S = csr_matrix((csr_m[0], csr_m[1], csr_m[2])).todense()
         A_hat = (np.ones(S.shape).T * background).T
@@ -83,12 +79,11 @@ class Decoder:
         with n frames.
 
         :param self: Represent the instance of the class
-        :param A_hat: Get the frames from the matrix
-        :param width: Set the width of the video
-        :param height: Specify the height of the image
-        :param fps: Determine the frame rate of the video
+        :param A_hat: The matrix to perform the operation
+        :param width: The width of the video
+        :param height: The height of the video
+        :param fps: The frame rate of the video
         :return: A video clip
-        :doc-author: Trelent
         """
         frames = []
         for frame_idx in range(A_hat.shape[1]):
@@ -99,15 +94,15 @@ class Decoder:
 
     def decode(self, encoded_file_path):
         """
-        The decode function takes in an encoded file path and returns a decoded video file.
+        The decode function takes in an encoded file path and save a decoded video file
+        on the working directory.
         The function first loads the encoded data from the given path, then decompresses it using 
         the decompress function.
         Finally, it converts this matrix into a video and writes it to disk.
 
         :param self: Bind the method to an object
-        :param encoded_file_path: Load the encoded file
-        :return: The path to the decoded video
-        :doc-author: Trelent
+        :param encoded_file_path: The encoded file path
+        :return: The path to the decoded video in disk
         """
         self.encoded_file_path = encoded_file_path
         csr_m, background, meta_data = self.load_encoded_file(encoded_file_path)
