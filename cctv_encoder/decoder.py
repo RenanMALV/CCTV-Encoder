@@ -74,6 +74,7 @@ class Decoder:
             A_hat = (np.ones(S.shape).T * background).T
             A_hat += S
         elif compositon == 'background':
+            S = csr_matrix((csr_m[0], csr_m[1], csr_m[2])).todense()
             A_hat = (np.ones(S.shape).T * background).T
         elif compositon == 'foreground':
             A_hat = csr_matrix((csr_m[0], csr_m[1], csr_m[2])).todense()

@@ -22,3 +22,7 @@ decoder = Decoder(WORKDIR)
 decoder.decode(encoded_file_path = WORKDIR + "BallBounce_30sec_(144p).npz",
                out_file_name = "BallBounce_foreground_decoded.mp4",
                composition = "foreground")
+
+decoder.decode(encoded_file_path = WORKDIR + "BallBounce_30sec_(144p).npz",
+               out_file_name = "BallBounce_decoded.mp4",
+               composition = "both")
