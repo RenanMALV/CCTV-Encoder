@@ -6,7 +6,7 @@ For the Robust PCA's optimization problem, we can use the [Primary Component Pur
 
 For the SVD algorithm, We'll use [Facebook's Fast Randomized PCA library](https://github.com/facebookarchive/fbpca).
 
-## Check out the [project's report doc (TODO: Create report)](https://workinprogress.no/dynamic/upload/bilder/Work-In-Progress.png)
+## Check out the [project's report doc (Portuguese)](https://github.com/RenanMALV/CCTV-Encoder/blob/main/Report_pt.pdf)
 
 ## Requirements
   - NumPy >= 2.0.0
